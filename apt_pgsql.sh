@@ -26,24 +26,24 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y gnupg2
+$STD sudo apt-get install -y curl
+$STD sudo apt-get install -y sudo
+$STD sudo apt-get install -y mc
+$STD sudo apt-get install -y gnupg2
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up PostgreSQL Repository"
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-echo "deb http://apt.postgresql.org/pub/repos/apt ${VERSION}-pgdg main" >/etc/apt/sources.list.d/pgdg.list
-curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /etc/apt/trusted.gpg.d/postgresql.gpg
+sudo echo "deb http://apt.postgresql.org/pub/repos/apt ${VERSION}-pgdg main" >/etc/apt/sources.list.d/pgdg.list
+sudo curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /etc/apt/trusted.gpg.d/postgresql.gpg
 msg_ok "Setup PostgreSQL Repository"
 
 msg_info "Installing PostgreSQL"
-$STD apt-get update
+$STD sudo apt-get update
 
-$STD apt-get install -y postgresql
+$STD sudo apt-get install -y postgresql
 
-cat <<EOF >/etc/postgresql/16/main/pg_hba.conf
+sudo cat <<EOF >/etc/postgresql/16/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
 local   all             postgres                                peer
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -62,7 +62,7 @@ host    replication     all             127.0.0.1/32            scram-sha-256
 host    replication     all             ::1/128                 scram-sha-256
 EOF
 
-cat <<EOF >/etc/postgresql/16/main/postgresql.conf
+sudo cat <<EOF >/etc/postgresql/16/main/postgresql.conf
 # -----------------------------
 # PostgreSQL configuration file
 # -----------------------------
@@ -149,8 +149,8 @@ msg_ok "Installed PostgreSQL"
 read -r -p "Would you like to add Adminer? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer"
-  $STD apt install -y adminer
-  $STD a2enconf adminer
+  $STD sudo apt install -y adminer
+  $STD sudo a2enconf adminer
   systemctl reload apache2
   msg_ok "Installed Adminer"
 fi
@@ -159,8 +159,8 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get autoremove
-$STD apt-get autoclean
+$STD sudo apt-get autoremove
+$STD sudo apt-get autoclean
 msg_ok "Cleaned"
 
 msg_ok "Completed Successfully!\n"
