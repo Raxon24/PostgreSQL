@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#! /usr/bin/bash
 source <(curl -s https://raw.githubusercontent.com/Raxon24/mixt/main/built.func)
 
 function header_info {
