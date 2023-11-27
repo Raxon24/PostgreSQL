@@ -1,8 +1,7 @@
-#! /usr/bin/bash
+#! /usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/Raxon24/mixt/main/built.func)
-
-function header_info {
 clear
+function header_info {
 cat <<"EOF"
     ____             __                 _____ ____    __ 
    / __ \____  _____/ /_____ _________ / ___// __ \  / / 
@@ -11,17 +10,12 @@ cat <<"EOF"
 /_/    \____/____/\__/\__, /_/   \___/____/\___\_\/_____/
                      /____/                              
 EOF
-
-
 }
-start
-Instaling PostgreSQL
-
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 catch_errors
-setting_up_container
+setting_up_PosgreSQL
 network_check
 update_os
 
