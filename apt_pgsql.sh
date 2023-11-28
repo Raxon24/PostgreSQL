@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/Raxon24/mixt/main/built.func)
-clear
-function header_info {
+
 cat <<"EOF"
     ____             __                 _____ ____    __ 
    / __ \____  _____/ /_____ _________ / ___// __ \  / / 
@@ -10,20 +8,14 @@ cat <<"EOF"
 /_/    \____/____/\__/\__, /_/   \___/____/\___\_\/_____/
                      /____/                              
 EOF
-}
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
-color
-catch_errors
-setting_up_PosgreSQL
-network_check
-update_os
 
 msg_info "Installing Dependencies"
 $STD sudo apt-get install -y curl
 $STD sudo apt-get install -y sudo
 $STD sudo apt-get install -y mc
 $STD sudo apt-get install -y gnupg2
+$STD sudo apt-get install -y python3
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up PostgreSQL Repository"
@@ -138,16 +130,17 @@ include_dir = 'conf.d'
 EOF
 
 sudo systemctl restart postgresql
-msg_ok "Installed PostgreSQL"
+sleep 3
+pg_isready
+pg_isready -h localhost -p 5432
+msg_ok "PostgreSQL Successfully Installed"
 
-read -r -p "Would you like to add Adminer? <y/N> " prompt
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Adminer"
-  $STD sudo apt install -y adminer
-  $STD sudo a2enconf adminer
-  systemctl reload apache2
-  msg_ok "Installed Adminer"
-fi
+#read -r -p "Would you like to add pgAdmin4 database madager? <y/N> " prompt
+#if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+#  msg_info "Installing pgAdmin4"
+#  $STD sudo apt install -y adminer
+#  msg_ok "Installed Adminer"
+#fi
 
 motd_ssh
 customize
